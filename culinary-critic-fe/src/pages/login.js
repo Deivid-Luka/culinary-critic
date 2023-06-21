@@ -13,7 +13,7 @@ function LoginPage() {
   const handleLogin = () => {
     if(username && password) {
     postLogin(username, password).then((res) => {
-      
+      console.log("REQUEST DONE");
     }).catch((error) => {
       // Handle error here
       console.log('An error occurred during login:', error);
