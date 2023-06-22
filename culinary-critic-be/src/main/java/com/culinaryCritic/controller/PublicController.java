@@ -3,7 +3,9 @@ package com.culinaryCritic.controller;
 import com.culinaryCritic.DTO.Authentification.AuthenticationDTO;
 import com.culinaryCritic.DTO.Save.UserSaveDTO;
 import com.culinaryCritic.entity.Restaurant;
+import com.culinaryCritic.entity.Review;
 import com.culinaryCritic.service.RestaurantService;
+import com.culinaryCritic.service.ReviewService;
 import com.culinaryCritic.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -22,10 +24,13 @@ public class PublicController {
 
     private final RestaurantService restaurantService;
 
+    private final ReviewService reviewService;
+
     @Autowired
-    public PublicController(UserService userService, RestaurantService restaurantService) {
+    public PublicController(UserService userService, RestaurantService restaurantService, ReviewService reviewService) {
         this.userService = userService;
         this.restaurantService = restaurantService;
+        this.reviewService = reviewService;
     }
 
 
@@ -51,7 +56,7 @@ public class PublicController {
     }
 
     @GetMapping("/locations")
-    public ResponseEntity<List<String>> getAllLocations(){
+    public ResponseEntity<List<String>> getAllLocations() {
 
         return new ResponseEntity<>(restaurantService.getAllLocations(), HttpStatus.OK);
     }
@@ -71,4 +76,16 @@ public class PublicController {
         List<Restaurant> restaurants = restaurantService.getRestaurantsByLocation(location);
         return ResponseEntity.ok(restaurants);
     }
+
+
+    @PostMapping("/reviews/{restaurantId}")
+    public ResponseEntity<Review> createReview(@PathVariable("restaurantId") Long restaurantId, @RequestBody Review review) {
+        try {
+            Review savedReview = reviewService.save(restaurantId, review);
+            return ResponseEntity.ok(savedReview);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 }
