@@ -50,15 +50,6 @@ public class PublicController {
         return new ResponseEntity<>(restaurantService.getAllLocations(), HttpStatus.OK);
     }
 
-    @PostMapping("/register/restaurant")
-    public ResponseEntity<String> registerRestaurant(@RequestBody Restaurant restaurant) {
-        try {
-            restaurantService.save(restaurant);
-            return new ResponseEntity<>("OK", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
 
     @GetMapping("/restaurants")
     public ResponseEntity<List<Restaurant>> getRestaurantsByLocation(@RequestParam("location") String location) {
