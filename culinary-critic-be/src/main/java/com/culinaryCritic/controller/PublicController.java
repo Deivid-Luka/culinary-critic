@@ -1,7 +1,6 @@
 package com.culinaryCritic.controller;
 
 import com.culinaryCritic.DTO.Authentification.AuthenticationDTO;
-import com.culinaryCritic.DTO.Save.UserSaveDTO;
 import com.culinaryCritic.entity.Restaurant;
 import com.culinaryCritic.entity.Review;
 import com.culinaryCritic.service.RestaurantService;
@@ -34,16 +33,6 @@ public class PublicController {
     }
 
 
-    @PostMapping("/register/user")
-    public ResponseEntity<String> registerUser(@RequestBody UserSaveDTO userSaveDTO) {
-        try {
-            userService.save(userSaveDTO);
-            return new ResponseEntity<>("OK", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-
-    }
 
 
     @PostMapping("/login")
@@ -78,13 +67,13 @@ public class PublicController {
     }
 
 
-    @PostMapping("/reviews/{restaurantId}")
-    public ResponseEntity<Review> createReview(@PathVariable("restaurantId") Long restaurantId, @RequestBody Review review) {
+    @PostMapping("/review/{restaurantId}")
+    public ResponseEntity<?> createReview(@PathVariable("restaurantId") Long restaurantId, @RequestBody Review review) {
         try {
             Review savedReview = reviewService.save(restaurantId, review);
             return ResponseEntity.ok(savedReview);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

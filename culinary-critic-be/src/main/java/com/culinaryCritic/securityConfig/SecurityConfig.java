@@ -36,10 +36,8 @@ public class SecurityConfig {
         http.addFilterAfter(new AuthoritiesLoggingAfterFilter(), BasicAuthenticationFilter.class);
         http.addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class);
         http.authorizeHttpRequests((authz) -> authz
-                .requestMatchers("/home/**").hasRole("ADMIN")
                 .requestMatchers("/user/**").hasRole("USER")
-                .requestMatchers("/doctor/**").hasRole("DOCTOR")
-                .requestMatchers("/staff/**").hasRole("STAFF")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/public/**").permitAll()
                 .anyRequest().authenticated());
 
