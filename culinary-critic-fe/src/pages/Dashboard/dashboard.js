@@ -119,14 +119,15 @@ function Dashboard() {
             <div className="close-button-icon"></div>
           </button>
           <div className="menu-buttons">
-            <button className="menu-button" onClick={redirectToLogin}>
+            <button className="sign-in-button" onClick={redirectToLogin}>
               <FaSignInAlt />
-              <span className="menu-button-text">Sign In</span>
+              <span className="sign-in-button-text">Sign In</span>
             </button>
-            <button className="menu-button" onClick={redirectToSignUp}>
+            <button className="sign-up-button" onClick={redirectToSignUp}>
               <FaUserPlus />
-              <span className="menu-button-text">Sign Up</span>
+              <span className="sign-up-button-text">Sign Up</span>
             </button>
+
           </div>
         </aside>
       )}
