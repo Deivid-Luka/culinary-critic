@@ -1,23 +1,29 @@
 package com.culinaryCritic.service;
 
+import com.culinaryCritic.DTO.Authentification.JWTValues;
 import com.culinaryCritic.entity.Restaurant;
 import com.culinaryCritic.entity.Review;
 import com.culinaryCritic.repository.RestaurantRepository;
 import com.culinaryCritic.repository.ReviewRepository;
+import com.culinaryCritic.securityConfig.JWTTokenFunctions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import javax.naming.LimitExceededException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 class ReviewServiceImplTest {
+
+    private ReviewService reviewService;
 
     @Mock
     private RestaurantRepository restaurantRepository;
@@ -25,73 +31,78 @@ class ReviewServiceImplTest {
     @Mock
     private ReviewRepository reviewRepository;
 
-    @InjectMocks
-    private ReviewServiceImpl reviewService;
+    @Mock
+    private JWTTokenFunctions jwtTokenFunctions;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        reviewService = new ReviewServiceImpl(restaurantRepository, reviewRepository, jwtTokenFunctions);
     }
 
     @Test
-    void save_ValidReview_SuccessfullySaved() throws Exception {
+    void saveReviewWithUser_ValidReview_SaveReview() throws Exception {
         // Arrange
         Long restaurantId = 1L;
-        String report = "Good restaurant.";
+        String token = "dummyToken";
         Review review = new Review();
-        review.setReport(report);
-
+        review.setReviewerName("John Doe");
+        review.setReport("ASDASDASD");
         Restaurant restaurant = new Restaurant();
         restaurant.setId(restaurantId);
 
+        List<Review> existingReviews = new ArrayList<>();
+
+        JWTValues jwtValues = new JWTValues();
+        jwtValues.setUsername("John Doe");
+        when(jwtTokenFunctions.tokenValueExtractor(token)).thenReturn(jwtValues);
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurant));
-        when(reviewRepository.save(review)).thenReturn(review);
+        when(reviewRepository.findByReviewerNameAndReviewDateBetween(any(String.class), any(Date.class), any(Date.class)))
+                .thenReturn(existingReviews);
 
-        // Act
-        Review savedReview = reviewService.saveReview(restaurantId, review);
+        assertDoesNotThrow(() -> reviewService.saveReviewWithUser(restaurantId, review, token));
 
-        // Assert
-        assertNotNull(savedReview);
-        assertEquals(restaurant, savedReview.getRestaurant());
-        assertNotNull(savedReview.getReviewDate());
-        assertEquals(report, savedReview.getReport());
+        assertEquals(restaurant, review.getRestaurant());
+        assertNotNull(review.getReviewDate());
+        assertEquals(0, existingReviews.size());
+    }
 
-        verify(restaurantRepository).findById(restaurantId);
-        verify(reviewRepository).save(review);
+
+    @Test
+    void saveReviewWithUser_ExistingReview_ThrowLimitExceededException() throws Exception {
+        // Arrange
+        Long restaurantId = 1L;
+        String token = "dummyToken";
+        Review review = new Review();
+        review.setReviewerName("John Doe");
+
+        Date currentDate = new Date();
+        Date weekAgo = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+        List<Review> existingReviews = new ArrayList<>();
+        existingReviews.add(new Review());
+        JWTValues jwtValues = new JWTValues();
+        jwtValues.setUsername("John Doe");
+        when(jwtTokenFunctions.tokenValueExtractor(token)).thenReturn(jwtValues);
+        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.empty());
+        when(reviewRepository.findByReviewerNameAndReviewDateBetween(any(String.class), any(Date.class), any(Date.class)))
+                .thenReturn(existingReviews);
+
+        assertThrows(LimitExceededException.class, () ->
+                reviewService.saveReviewWithUser(restaurantId, review, token));
     }
 
     @Test
-    void save_InvalidReview_ThrowsLimitExceededException() {
+    void saveReview_ReviewExceedsLimit_ThrowLimitExceededException() throws LimitExceededException {
         // Arrange
         Long restaurantId = 1L;
-        String report = "This is a sample report.";
         Review review = new Review();
+        String report = "This is a very long report that exceeds the limit of 100 characters.";
         review.setReport(report.repeat(10));
-
-        // Adjust the behavior of the restaurantRepository mock
-        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(new Restaurant()));
-
-        // Act and Assert
-        assertThrows(LimitExceededException.class, () -> reviewService.saveReview(restaurantId, review));
-
-        verify(restaurantRepository, never()).findById(anyLong());
-        verify(reviewRepository, never()).save(any());
-    }
-
-
-    @Test
-    void save_RestaurantNotFound_ThrowsNullPointerException() {
-        // Arrange
-        Long restaurantId = 1L;
-        Review review = new Review();
-        review.setReport("Good restaurant.");
 
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.empty());
 
-        // Act and Assert
-        assertThrows(NullPointerException.class, () -> reviewService.saveReview(restaurantId, review));
-
-        verify(restaurantRepository).findById(restaurantId);
-        verify(reviewRepository, never()).save(any());
+        assertThrows(LimitExceededException.class, () ->
+                reviewService.saveReview(restaurantId, review));
     }
 }
