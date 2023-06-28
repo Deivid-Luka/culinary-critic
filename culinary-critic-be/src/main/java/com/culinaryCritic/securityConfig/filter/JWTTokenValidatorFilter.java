@@ -23,7 +23,7 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String jwt = request.getHeader(SecurityConstants.JWT_HEADER).substring(7);
+        String jwt = request.getHeader(SecurityConstants.JWT_HEADER);
         try {
             SecretKey key = Keys.hmacShaKeyFor(
                     SecurityConstants.JWT_KEY.getBytes(StandardCharsets.UTF_8));

@@ -21,8 +21,8 @@ public class UserController {
     @PostMapping("/review/{restaurantId}")
     public ResponseEntity<?> createReview(@RequestHeader("Authorization") String token, @PathVariable("restaurantId") Long restaurantId, @RequestBody Review review) {
         try {
-            Review savedReview = reviewService.saveReviewWithUser(restaurantId, review, token);
-            return ResponseEntity.ok(savedReview);
+            reviewService.saveReviewWithUser(restaurantId, review, token);
+            return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

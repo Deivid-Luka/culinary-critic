@@ -38,8 +38,6 @@ public class AuthenticationConfig implements AuthenticationProvider {
         }
 
 
-
-
         throw new BadCredentialsException("Invalid username or password!");
     }
 

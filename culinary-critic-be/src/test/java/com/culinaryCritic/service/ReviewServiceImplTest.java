@@ -48,7 +48,7 @@ class ReviewServiceImplTest {
         when(reviewRepository.save(review)).thenReturn(review);
 
         // Act
-        Review savedReview = reviewService.save(restaurantId, review);
+        Review savedReview = reviewService.saveReview(restaurantId, review);
 
         // Assert
         assertNotNull(savedReview);
@@ -72,7 +72,7 @@ class ReviewServiceImplTest {
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(new Restaurant()));
 
         // Act and Assert
-        assertThrows(LimitExceededException.class, () -> reviewService.save(restaurantId, review));
+        assertThrows(LimitExceededException.class, () -> reviewService.saveReview(restaurantId, review));
 
         verify(restaurantRepository, never()).findById(anyLong());
         verify(reviewRepository, never()).save(any());
@@ -89,7 +89,7 @@ class ReviewServiceImplTest {
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.empty());
 
         // Act and Assert
-        assertThrows(NullPointerException.class, () -> reviewService.save(restaurantId, review));
+        assertThrows(NullPointerException.class, () -> reviewService.saveReview(restaurantId, review));
 
         verify(restaurantRepository).findById(restaurantId);
         verify(reviewRepository, never()).save(any());

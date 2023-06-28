@@ -1,6 +1,7 @@
 package com.culinaryCritic.service;
 import com.culinaryCritic.DTO.Authentification.AuthenticationDTO;
 import com.culinaryCritic.DTO.Save.UserSaveDTO;
+import com.culinaryCritic.DTO.SimpleUserDTO;
 import com.culinaryCritic.entity.Role;
 import com.culinaryCritic.entity.User;
 import com.culinaryCritic.repository.RoleRepository;
@@ -59,6 +60,14 @@ public class UserServiceImpl implements UserService {
     public String authenticate(AuthenticationDTO user) {
         Authentication authentication = authenticationConfig.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
         return jwtTokenFunctions.generateToken(authentication);
+    }
+
+    @Override
+    public SimpleUserDTO getUserByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        SimpleUserDTO simpleUserDTO = modelMapper.map(user, SimpleUserDTO.class);
+        simpleUserDTO.setRole(user.getRole().getName());
+        return simpleUserDTO;
     }
 
 

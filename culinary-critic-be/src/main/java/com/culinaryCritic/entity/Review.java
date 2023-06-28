@@ -16,7 +16,7 @@ public class Review {
     private Restaurant restaurant;
 
     @Column(nullable = false)
-    private String rating;
+    private Double rating;
 
     @Column(name = "food_quality_rating", nullable = false)
     private Double foodQualityRating;
@@ -64,11 +64,11 @@ public class Review {
         this.restaurant = restaurant;
     }
 
-    public String getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 

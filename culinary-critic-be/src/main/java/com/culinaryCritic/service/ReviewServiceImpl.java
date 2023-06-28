@@ -27,20 +27,16 @@ public class ReviewServiceImpl implements ReviewService{
         this.jwtTokenFunctions = jwtTokenFunctions;
     }
 
-    @Override
-    public Review save(Long restaurantId, Review review) throws Exception {
-        return saveReview(restaurantId,review);
-    }
 
     @Override
-    public Review saveReviewWithUser(Long restaurantId, Review review, String token) throws Exception {
+    public void saveReviewWithUser(Long restaurantId, Review review, String token) throws Exception {
 
         JWTValues jwtValues = jwtTokenFunctions.tokenValueExtractor(token);
         review.setReviewerName(jwtValues.getUsername());
-        return saveReview(restaurantId,review);
+        saveReview(restaurantId,review);
     }
-
-    private Review saveReview(Long restaurantId, Review review) throws LimitExceededException {
+    @Override
+    public void saveReview(Long restaurantId, Review review) throws LimitExceededException {
         if (review.getReport().length()>=100) {
             throw new LimitExceededException("Report can not exceed 100 characters");
         }
@@ -48,7 +44,7 @@ public class ReviewServiceImpl implements ReviewService{
                 .orElseThrow(() -> new NullPointerException("Restaurant not found with ID: " + restaurantId));
         review.setRestaurant(restaurant);
         review.setReviewDate(new Date());
-        return reviewRepository.save(review);
+        reviewRepository.save(review);
     }
 
 }

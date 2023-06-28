@@ -1,8 +1,11 @@
 package com.culinaryCritic.controller;
 
 import com.culinaryCritic.DTO.Authentification.AuthenticationDTO;
+import com.culinaryCritic.DTO.Display.RestaurantDisplay;
+import com.culinaryCritic.DTO.SimpleUserDTO;
 import com.culinaryCritic.entity.Restaurant;
 import com.culinaryCritic.entity.Review;
+import com.culinaryCritic.entity.User;
 import com.culinaryCritic.service.RestaurantService;
 import com.culinaryCritic.service.ReviewService;
 import com.culinaryCritic.service.UserService;
@@ -36,12 +39,11 @@ public class PublicController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<String> authenticate(@RequestBody AuthenticationDTO user) {
+    public ResponseEntity<SimpleUserDTO> authenticate(@RequestBody AuthenticationDTO user) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", userService.authenticate(user));
-        String jsonResponse = "{\"message\": \"OK\"}";
-
-        return new ResponseEntity<>(jsonResponse, headers, HttpStatus.OK);
+        SimpleUserDTO simpleUserDTO = userService.getUserByUsername(user.getUsername());
+        return ResponseEntity.ok().headers(headers).body(simpleUserDTO);
     }
 
     @GetMapping("/locations")
@@ -52,8 +54,8 @@ public class PublicController {
 
 
     @GetMapping("/restaurants")
-    public ResponseEntity<List<Restaurant>> getRestaurantsByLocation(@RequestParam("location") String location) {
-        List<Restaurant> restaurants = restaurantService.getRestaurantsByLocation(location);
+    public ResponseEntity<List<RestaurantDisplay>> getRestaurantsByLocation(@RequestParam("location") String location) {
+        List<RestaurantDisplay> restaurants = restaurantService.getRestaurantsByLocation(location);
         return ResponseEntity.ok(restaurants);
     }
 
@@ -61,8 +63,8 @@ public class PublicController {
     @PostMapping("/review/{restaurantId}")
     public ResponseEntity<?> createReview(@PathVariable("restaurantId") Long restaurantId, @RequestBody Review review) {
         try {
-            Review savedReview = reviewService.save(restaurantId, review);
-            return ResponseEntity.ok(savedReview);
+            reviewService.saveReview(restaurantId, review);
+            return new ResponseEntity<>("OK", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

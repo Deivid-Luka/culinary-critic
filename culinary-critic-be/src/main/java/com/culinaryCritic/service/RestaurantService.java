@@ -1,5 +1,6 @@
 package com.culinaryCritic.service;
 
+import com.culinaryCritic.DTO.Display.RestaurantDisplay;
 import com.culinaryCritic.entity.Restaurant;
 
 import java.util.List;
@@ -10,6 +11,6 @@ public interface RestaurantService {
 
     void save(Restaurant restaurant);
 
-    List<Restaurant> getRestaurantsByLocation(String location);
+    List<RestaurantDisplay> getRestaurantsByLocation(String location);
 
 }
