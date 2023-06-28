@@ -61,11 +61,9 @@ function LoginPage(props) {
   };
 
   const handleContinueAsGuest = () => {
-    // Handle "Continue as Guest" logic here
-    // You can redirect the user to the dashboard or perform any other action
+
     toast('Continuing as guest');
-    // Redirect to the dashboard or perform any other action for guest users
-    navigate('/dashboard'); // Replace '/dashboard' with your desired URL
+    navigate('/dashboard');
   };
 
   return (
@@ -125,6 +123,7 @@ function LoginPage(props) {
       </Button>
       <Button
         className="item"
+        id="continue-asGuest-button"
         variant="outlined"
         onClick={handleContinueAsGuest}
         style={{ marginTop: '10px' }}

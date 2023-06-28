@@ -11,12 +11,6 @@ public class UserSaveDTO {
 
     private String city;
 
-    private String profession;
-
-    private Double height;
-
-    private Double weight;
-
     private String birthday;
 
     private String mobileNumber;
@@ -63,29 +57,6 @@ public class UserSaveDTO {
         this.city = city;
     }
 
-    public String getProfession() {
-        return profession;
-    }
-
-    public void setProfession(String profession) {
-        this.profession = profession;
-    }
-
-    public Double getHeight() {
-        return height;
-    }
-
-    public void setHeight(Double height) {
-        this.height = height;
-    }
-
-    public Double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Double weight) {
-        this.weight = weight;
-    }
 
     public String getBirthday() {
         return birthday;

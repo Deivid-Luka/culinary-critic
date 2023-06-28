@@ -1,0 +1,36 @@
+body {
+    margin: 0; /* Remove default body margin */
+    overflow: hidden; /* Prevent scrolling */
+  }
+  .wrapper{
+    padding: 0px !important;
+  }
+  .container {
+    background-color: lightyellow;
+    border: none;
+    height: 100vh;
+    width: 110vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  
+  
+  .MuiTextField-root {
+    margin: 1em;
+    width: 25ch;
+    background-color: lightyellow;
+  }
+  
+  .MuiFormLabel-root {
+    color: #333;
+  }
+  
+  .MuiButton-containedPrimary {
+    margin: 1em;
+    background-color: #fdd835;
+    color: #333;
+  }
+  

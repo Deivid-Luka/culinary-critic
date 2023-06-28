@@ -4,6 +4,8 @@ import Wrapper from "./components/wrapper";
 import 'react-toastify/dist/ReactToastify.css';
 import AddRestaurantPage from './pages/AddRestaurant/addrestaurant';
 import Dashboard from './pages/Dashboard/dashboard';
+import RegistrationForm from './pages/UserRegistration/userRegistrationForm';
+
 import {setAuthToken} from "./services/mainAxios";
 import func from "./services/functions";
 import {AppContextProvider} from "./AppContext";
@@ -21,6 +23,8 @@ function App() {
                         <Route element={<AuthorizedRoutes />} >
                             <Route exact path="/addrestaurant" element={<AddRestaurantPage />} />
                             <Route exact path="/dashboard" element={<Dashboard />} />
+                            <Route exact path="/signup" element={<RegistrationForm />} />
+
                         </Route>
                         {/*<Route element={<AuthorizedRoute />} >*/}
                         {/*    <Route path="/" element={<HomePage />} />*/}

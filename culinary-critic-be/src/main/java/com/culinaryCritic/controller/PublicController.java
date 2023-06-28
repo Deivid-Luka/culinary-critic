@@ -2,6 +2,7 @@ package com.culinaryCritic.controller;
 
 import com.culinaryCritic.DTO.Authentification.AuthenticationDTO;
 import com.culinaryCritic.DTO.Display.RestaurantDisplay;
+import com.culinaryCritic.DTO.Save.UserSaveDTO;
 import com.culinaryCritic.DTO.SimpleUserDTO;
 import com.culinaryCritic.entity.Restaurant;
 import com.culinaryCritic.entity.Review;
@@ -68,6 +69,17 @@ public class PublicController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/register/user")
+    public ResponseEntity<String> registerUser(@RequestBody UserSaveDTO userSaveDTO) {
+        try {
+            userService.save(userSaveDTO);
+            return new ResponseEntity<>("OK", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
 }
