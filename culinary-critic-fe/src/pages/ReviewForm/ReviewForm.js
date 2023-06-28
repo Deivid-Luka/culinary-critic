@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './ReviewForm.css';
-import {Rating} from "@mui/material";
-import TextField from "@mui/material/TextField";
+import { Rating } from '@mui/material';
+import TextField from '@mui/material/TextField';
 
 function ReviewForm({ restaurantId, onReviewSubmit }) {
-  const [rating, setRating] = useState('');
+  const [rating, setOverallRating] = useState(0);
   const [foodQualityRating, setFoodQualityRating] = useState(0);
   const [ambianceRating, setAmbianceRating] = useState(0);
   const [serviceQualityRating, setServiceQualityRating] = useState(0);
@@ -14,14 +14,21 @@ function ReviewForm({ restaurantId, onReviewSubmit }) {
   const [valueForMoneyRating, setValueForMoneyRating] = useState(0);
   const [report, setReport] = useState('');
   const [reviewerName, setReviewerName] = useState('');
+  const [token, setToken] = useState('');
+
+  useEffect(() => {
+    // Check if the user is logged in by checking the 'cc-token' in localStorage
+    const storedToken = localStorage.getItem('cc-token');
+    if (storedToken) {
+      setToken(storedToken);
+      // Fetch user data or perform any other action here
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const reviewData = {
-      restaurant: {
-        id: restaurantId,
-      },
       rating,
       foodQualityRating,
       ambianceRating,
@@ -34,10 +41,15 @@ function ReviewForm({ restaurantId, onReviewSubmit }) {
     };
 
     try {
-      const response = await axios.post('http://localhost:8080/public/reviews', reviewData);
+      const url = token ? `http://localhost:8080/user/review/${restaurantId}` : `http://localhost:8080/public/review/${restaurantId}`;
+      const response = await axios.post(url, reviewData, {
+        headers: {
+          Authorization: token, // Include the token in the request headers for authorization
+        },
+      });
       onReviewSubmit(response.data);
       // Clear the form after successful submission
-      setRating('');
+      setOverallRating(0);
       setFoodQualityRating(0);
       setAmbianceRating(0);
       setServiceQualityRating(0);
@@ -56,18 +68,23 @@ function ReviewForm({ restaurantId, onReviewSubmit }) {
       <h2 className="form-title">Add a Review</h2>
       <form onSubmit={handleSubmit}>
         <label>
-          Rating:
+          Overall Rating:
         </label>
-        <TextField type="text" size="small" value={rating} onChange={(e) => setRating(e.target.value)} />
-        <label>
+        <Rating
+          name="overallRating"
+          value={rating}
+          onChange={(event, newValue) => {
+            setOverallRating(newValue);
+          }}
+        />        <label>
           Food Quality Rating:
         </label>
         <Rating
-            name="foodQualityRating"
-            value={foodQualityRating}
-            onChange={(event, newValue) => {
-              setFoodQualityRating(newValue);
-            }}
+          name="foodQualityRating"
+          value={foodQualityRating}
+          onChange={(event, newValue) => {
+            setFoodQualityRating(newValue);
+          }}
         />
 
         <label>
@@ -131,11 +148,14 @@ function ReviewForm({ restaurantId, onReviewSubmit }) {
         <TextField type="text" size="small" multiline minRows={3} value={report} onChange={(e) => setReport(e.target.value)} />
 
 
-        <label>
-          Reviewer Name:
-        </label>
-        <TextField type="text" size="small" value={reviewerName} onChange={(e) => setReviewerName(e.target.value)} />
-
+        {!token && (
+          <label>
+            Reviewer Name:
+          </label>
+        )}
+        {!token && (
+          <TextField type="text" size="small" value={reviewerName} onChange={(e) => setReviewerName(e.target.value)} />
+        )}
 
         <button type="submit" className="submit-button">Submit Review</button>
       </form>

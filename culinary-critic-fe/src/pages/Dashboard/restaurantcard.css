@@ -1,0 +1,127 @@
+.restaurant-card {
+  background-color: lightgray;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.leave-review-button {
+  background-color: #009688;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.review-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pop-up {
+  position: relative;
+}
+.review-form-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%; /* Adjust the width as needed */
+    max-width: 300px; /* Adjust the maximum width as needed */
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    z-index: 1;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(70vh - 40px); /* Set the height to the viewport height minus 40px */
+    overflow-y: auto; /* Add a scrollbar when content exceeds the height */
+  }
+  
+  
+  .review-form-popup input,
+  .review-form-popup textarea {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 10px; /* Adjust the font size as needed */
+  }
+  
+  .review-form-popup button {
+    width: 100%;
+    padding: 5px;
+    background-color: #009688;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 10px; /* Adjust the font size as needed */
+    cursor: pointer;
+  }
+  
+  
+  
+
+.close-review-button {
+  background-color: #009688;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.show-reviews-button {
+  background-color: #009688;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.restaurant-reviews {
+  margin-top: 20px;
+}
+
+
+.average-ratings p {
+    font-size: 12px; /* Adjust the font size as needed */
+  }
+  
+  .average-ratings .MuiRating-root {
+    font-size: 16px; /* Adjust the font size as needed */
+  }
+  
+  .collapsible-rating-button {
+    font-size: 12px; /* Adjust the font size as needed */
+  }
+  
+  .collapsible-rating-section .average-ratings p {
+    font-size: 12px; /* Adjust the font size as needed */
+  }
+  
+  .collapsible-rating-section .average-ratings .MuiRating-root {
+    font-size: 16px; /* Adjust the font size as needed */
+  }
+  
+  .restaurant-reviews p {
+    font-size: 12px; /* Adjust the font size as needed */
+  }
+  
+  .restaurant-reviews .MuiRating-root {
+    font-size: 16px; /* Adjust the font size as needed */
+  }
+  
+
+/* Rest of the CSS code */

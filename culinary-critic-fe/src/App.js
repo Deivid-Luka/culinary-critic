@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes , Route } from 'react-router-dom';
 import LoginPage from './pages/Login/login';
-import HomePage from './pages/Home/home';
 import Wrapper from "./components/wrapper";
 import 'react-toastify/dist/ReactToastify.css';
 import AddRestaurantPage from './pages/AddRestaurant/addrestaurant';
@@ -8,7 +7,6 @@ import Dashboard from './pages/Dashboard/dashboard';
 import {setAuthToken} from "./services/mainAxios";
 import func from "./services/functions";
 import {AppContextProvider} from "./AppContext";
-import AuthorizedRoute from "./components/AuthorizedRoute/authorizedRoute";
 import Forbidden403 from "./pages/Forbidden403/forbidden403";
 import AuthorizedRoutes from "./components/AuthorizedRoute/authorizedRoute";
 

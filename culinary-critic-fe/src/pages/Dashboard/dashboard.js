@@ -1,12 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import ReviewForm from '../ReviewForm/ReviewForm';
+import RestaurantCard from './restaurantcard';
+import { FaSearch, FaBars, FaSignInAlt, FaUserPlus } from 'react-icons/fa';
+import { MdClose } from 'react-icons/md';
 import './dashboard.css';
 
 function Dashboard() {
   const [location, setLocation] = useState('');
   const [locations, setLocations] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
+  const [showReviewForm, setShowReviewForm] = useState({});
+  const [showReviews, setShowReviews] = useState({});
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchSubmitted, setSearchSubmitted] = useState(false);
+  const menuRef = useRef(null);
 
   useEffect(() => {
     fetchLocations();
@@ -27,77 +34,145 @@ function Dashboard() {
     try {
       const response = await axios.get(`http://localhost:8080/public/restaurants?location=${location}`);
       setRestaurants(response.data);
+      setSearchSubmitted(true);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleReviewSubmit = (restaurantId, review) => {
-    setRestaurants((prevRestaurants) =>
-      prevRestaurants.map((prevRestaurant) =>
-        prevRestaurant.id === restaurantId
-          ? { ...prevRestaurant, reviews: [...prevRestaurant.reviews, review] }
-          : prevRestaurant
-      )
-    );
+  const handleReviewSubmit = async (restaurantId, review) => {
+    try {
+      const response = await axios.post(`http://localhost:8080/public/review/${restaurantId}`, review);
+      const updatedRestaurant = response.data;
+      setRestaurants((prevRestaurants) =>
+        prevRestaurants.map((prevRestaurant) =>
+          prevRestaurant.restaurant.id === restaurantId ? { ...prevRestaurant, restaurant: updatedRestaurant } : prevRestaurant
+        )
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
+  const toggleShowReviewForm = (restaurantId) => {
+    setShowReviewForm((prevShowReviewForm) => ({
+      ...prevShowReviewForm,
+      [restaurantId]: !prevShowReviewForm[restaurantId],
+    }));
+  };
+
+  const toggleShowReviews = (restaurantId) => {
+    setShowReviews((prevShowReviews) => ({
+      ...prevShowReviews,
+      [restaurantId]: !prevShowReviews[restaurantId],
+    }));
+  };
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
+  const toggleMenu = () => {
+    setMenuOpen((prevMenuOpen) => !prevMenuOpen);
+  };
+
+  const redirectToLogin = () => {
+    // Redirect to the login page
+    window.location.href = '/login';
+  };
+
+  const redirectToSignUp = () => {
+    // Redirect to the sign-up page
+    window.location.href = '/signup';
+  };
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (
+        menuOpen &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        event.target.className !== 'menu-button' &&
+        !event.target.closest('.menu')
+      ) {
+        closeMenu();
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [menuOpen]);
+
   return (
-    <div className="dashboard" style={{minWidth: "30%"}}>
+    <div className="dashboard">
       <h1 className="dashboard-title">Find Restaurants</h1>
-      <form onSubmit={handleSearch} className="search-form">
-        <label className="search-label">
-          Location:
+      <button className="menu-button" onClick={toggleMenu}>
+        {menuOpen ? <MdClose /> : <FaBars />}
+      </button>
+
+      {menuOpen && (
+        <aside className="menu" ref={menuRef}>
+          <button className="close-menu-button" onClick={closeMenu}>
+            <div className="close-button-icon"></div>
+          </button>
+          <div className="menu-buttons">
+            <button className="menu-button" onClick={redirectToLogin}>
+              <FaSignInAlt />
+              <span className="menu-button-text">Sign In</span>
+            </button>
+            <button className="menu-button" onClick={redirectToSignUp}>
+              <FaUserPlus />
+              <span className="menu-button-text">Sign Up</span>
+            </button>
+          </div>
+        </aside>
+      )}
+
+      <form onSubmit={handleSearch} className={`search-form ${searchSubmitted ? 'search-form-top' : ''}`}>
+        <div className="search-input-wrapper">
           <input
             type="text"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             list="locations"
             className="search-input"
+            placeholder="Enter location"
           />
-          <datalist id="locations">
-            {locations.map((location) => (
-              <option key={location} value={location} />
-            ))}
-          </datalist>
-        </label>
-        <button type="submit" className="search-button">
-          Search
-        </button>
+          <button type="submit" className="search-button">
+            <FaSearch />
+          </button>
+        </div>
+        <datalist id="locations">
+          {locations.map((location) => (
+            <option key={location} value={location} />
+          ))}
+        </datalist>
       </form>
 
       {restaurants.length > 0 && (
-        <div className="restaurants-list">
-          <h2 className="restaurants-list-title">Restaurants:</h2>
-          <ul className="restaurant-cards">
-            {restaurants.map((restaurant) => (
-              <li key={restaurant.id} className="restaurant-card">
-                <h3 className="restaurant-name">{restaurant.name}</h3>
-                <p className="restaurant-info">
-                  <strong>Location:</strong> {restaurant.location}
-                </p>
-                <p className="restaurant-info">
-                  <strong>Type of Food:</strong> {restaurant.typeOfFood}
-                </p>
-                {/* Render existing reviews */}
-                {restaurant.reviews && restaurant.reviews.length > 0 && (
-                  <div className="restaurant-reviews">
-                    <h4>Reviews:</h4>
-                    <ul>
-                      {restaurant.reviews.map((review) => (
-                        <li key={review.id}>{/* Render individual review details */}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {/* Render the ReviewForm component */}
-                <ReviewForm
-                  restaurantId={restaurant.id}
-                  onReviewSubmit={(review) => handleReviewSubmit(restaurant.id, review)}
-                />
-              </li>
+        <div className={`restaurants-list ${searchSubmitted ? 'results-displayed' : ''}`}>
+          <div className="restaurant-cards">
+            {restaurants.map((restaurantInfo) => (
+              <RestaurantCard
+                key={restaurantInfo.restaurant.id}
+                restaurantInfo={restaurantInfo}
+                showReviewForm={showReviewForm}
+                showReviews={showReviews}
+                handleReviewSubmit={handleReviewSubmit}
+                toggleShowReviewForm={toggleShowReviewForm}
+                toggleShowReviews={toggleShowReviews}
+              >
+                <div className="restaurant-card">
+                  <h2 className="restaurant-card-title">{restaurantInfo.restaurant.name}</h2>
+                  <div className="review-stars" style={{ '--rating': restaurantInfo.restaurant.rating }}></div>
+                  {/* Add other restaurant info as needed */}
+                </div>
+              </RestaurantCard>
             ))}
-          </ul>
+          </div>
         </div>
       )}
     </div>

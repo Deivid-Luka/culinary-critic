@@ -1,1 +1,209 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
 
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: #f8f8f8;
+  transition: background-color 3s ease;
+  overflow: hidden; /* Hide the content that exceeds the viewport */
+}
+
+.menu-open {
+  background-color: #f2f2f2;
+}
+
+.App-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 8px 8px 0 0;
+}
+
+.header-buttons {
+  display: flex;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  width: 70%;
+  padding: 10px;
+  margin-top: 20px;
+  font-size: 18px;
+  border-radius: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar input[type="text"] {
+  flex: 1;
+  border: none;
+  outline: none;
+}
+
+.search-button {
+  background-color: #4a90e2;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  padding: 8px;
+  margin-left: 8px;
+  cursor: pointer;
+  transition: background-color 3s ease;
+}
+
+.search-button:hover {
+  background-color: #3682d9;
+}
+
+.App-sidebar {
+  position: absolute;
+  left: -240px;
+  top: 0;
+  bottom: 0;
+  width: 240px;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: left 3s ease;
+}
+
+.App.menu-open .App-sidebar {
+  left: 0;
+}
+
+.App-sidebar ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.App-sidebar li {
+  margin-bottom: 10px;
+}
+
+.close-menu-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.close-menu-button .close-button-icon {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  transform: rotate(45deg);
+}
+
+.close-menu-button .close-button-icon:before,
+.close-menu-button .close-button-icon:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background-color: #333;
+  transition: background-color 3s ease;
+}
+
+.close-menu-button .close-button-icon:before {
+  transform: translate(-50%, -50%);
+}
+
+.close-menu-button .close-button-icon:after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.close-menu-button:hover .close-button-icon:before,
+.close-menu-button:hover .close-button-icon:after {
+  background-color: #555;
+}
+
+.App-main {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 3s ease; /* Add transition for smooth sliding effect */
+  transform: translateX(0); /* Initial position */
+}
+
+.App.menu-open .App-main {
+  transform: translateX(150px); /* Slide the main content along with the sidebar */
+}
+
+.button {
+  margin-right: 10px;
+  padding: 10px 20px;
+  background-color: #fff;
+  color: #000;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 3s ease;
+}
+
+.button:hover {
+  background-color: #f2f2f2;
+}
+
+.menu-button {
+  background-color: transparent;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 3s ease;
+}
+
+.menu-button.open {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.menu-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 20px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.line {
+  width: 100%;
+  height: 2px;
+  background-color: #fff;
+  transition: background-color 3s ease;
+}
+
+.menu-button.open .line:nth-child(1) {
+  transform: rotate(45deg) translate(2px, 3px);
+}
+
+.menu-button.open .line:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-button.open .line:nth-child(3) {
+  transform: rotate(-45deg) translate(2px, -3px);
+}
