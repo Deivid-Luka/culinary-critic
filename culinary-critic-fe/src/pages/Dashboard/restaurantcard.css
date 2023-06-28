@@ -1,5 +1,8 @@
 .restaurant-card {
   background-color: lightgray;
+  min-width: 23vw;
+  max-width: 23vw;
+
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 20px;

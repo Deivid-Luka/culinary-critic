@@ -57,16 +57,17 @@ class ReviewServiceImplTest {
         jwtValues.setUsername("John Doe");
         when(jwtTokenFunctions.tokenValueExtractor(token)).thenReturn(jwtValues);
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurant));
-        when(reviewRepository.findByReviewerNameAndReviewDateBetween(any(String.class), any(Date.class), any(Date.class)))
+        when(reviewRepository.findByReviewerNameAndRestaurantIdAndReviewDateBetween(any(String.class), any(Long.class), any(Date.class), any(Date.class)))
                 .thenReturn(existingReviews);
 
-        assertDoesNotThrow(() -> reviewService.saveReviewWithUser(restaurantId, review, token));
+        // Act
+        reviewService.saveReviewWithUser(restaurantId, review, token);
 
+        // Assert
         assertEquals(restaurant, review.getRestaurant());
         assertNotNull(review.getReviewDate());
         assertEquals(0, existingReviews.size());
     }
-
 
     @Test
     void saveReviewWithUser_ExistingReview_ThrowLimitExceededException() throws Exception {
@@ -85,9 +86,10 @@ class ReviewServiceImplTest {
         jwtValues.setUsername("John Doe");
         when(jwtTokenFunctions.tokenValueExtractor(token)).thenReturn(jwtValues);
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.empty());
-        when(reviewRepository.findByReviewerNameAndReviewDateBetween(any(String.class), any(Date.class), any(Date.class)))
+        when(reviewRepository.findByReviewerNameAndRestaurantIdAndReviewDateBetween(any(String.class), any(Long.class), any(Date.class), any(Date.class)))
                 .thenReturn(existingReviews);
 
+        // Assert
         assertThrows(LimitExceededException.class, () ->
                 reviewService.saveReviewWithUser(restaurantId, review, token));
     }
@@ -102,6 +104,7 @@ class ReviewServiceImplTest {
 
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.empty());
 
+        // Assert
         assertThrows(LimitExceededException.class, () ->
                 reviewService.saveReview(restaurantId, review));
     }

@@ -45,11 +45,10 @@ function ReviewForm({ restaurantId, onReviewSubmit }) {
       const url = token ? `http://localhost:8080/user/review/${restaurantId}` : `http://localhost:8080/public/review/${restaurantId}`;
       const response = await axios.post(url, reviewData, {
         headers: {
-          Authorization: token, // Include the token in the request headers for authorization
+          Authorization: token,
         },
       });
       onReviewSubmit(response.data);
-      // Clear the form after successful submission
       setOverallRating(0);
       setFoodQualityRating(0);
       setAmbianceRating(0);
@@ -59,9 +58,14 @@ function ReviewForm({ restaurantId, onReviewSubmit }) {
       setValueForMoneyRating(0);
       setReport('');
       setReviewerName('');
+      toast.success('Review submitted successfully');
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+
     } catch (error) {
       console.error(error);
-      toast.error(error.response.data); // Display error message in toast notification
+      toast.error(error.response.data);
     }
   };
 
@@ -93,55 +97,55 @@ function ReviewForm({ restaurantId, onReviewSubmit }) {
           Ambiance Rating:
         </label>
         <Rating
-            name="ambianceRating"
-            value={ambianceRating}
-            onChange={(event, newValue) => {
-              setAmbianceRating(newValue);
-            }}
+          name="ambianceRating"
+          value={ambianceRating}
+          onChange={(event, newValue) => {
+            setAmbianceRating(newValue);
+          }}
         />
 
         <label>
           Service Quality Rating:
         </label>
         <Rating
-            name="serviceQualityRating"
-            value={serviceQualityRating}
-            onChange={(event, newValue) => {
-              setServiceQualityRating(newValue);
-            }}
+          name="serviceQualityRating"
+          value={serviceQualityRating}
+          onChange={(event, newValue) => {
+            setServiceQualityRating(newValue);
+          }}
         />
 
         <label>
           Cleanliness Rating:
         </label>
         <Rating
-            name="cleanlinessRating"
-            value={cleanlinessRating}
-            onChange={(event, newValue) => {
-              setCleanlinessRating(newValue);
-            }}
+          name="cleanlinessRating"
+          value={cleanlinessRating}
+          onChange={(event, newValue) => {
+            setCleanlinessRating(newValue);
+          }}
         />
 
         <label>
           Speed of Service Rating:
         </label>
         <Rating
-            name="speedOfServiceRating"
-            value={speedOfServiceRating}
-            onChange={(event, newValue) => {
-              setSpeedOfServiceRating(newValue);
-            }}
+          name="speedOfServiceRating"
+          value={speedOfServiceRating}
+          onChange={(event, newValue) => {
+            setSpeedOfServiceRating(newValue);
+          }}
         />
 
         <label>
           Value for Money Rating:
         </label>
         <Rating
-            name="valueForMoneyRating"
-            value={valueForMoneyRating}
-            onChange={(event, newValue) => {
-              setValueForMoneyRating(newValue);
-            }}
+          name="valueForMoneyRating"
+          value={valueForMoneyRating}
+          onChange={(event, newValue) => {
+            setValueForMoneyRating(newValue);
+          }}
         />
 
         <label>

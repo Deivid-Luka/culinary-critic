@@ -1,6 +1,6 @@
 .dashboard {
   background-image: url('./backround.jpg');
-  background-size: cover;
+    background-size: cover;
   background-position: center;
   padding: 20px;
   transition: all 0.3s ease;
@@ -111,7 +111,7 @@
 }
 .restaurants-list {
   display: flex;
-  flex-wrap: nowrap !important;
+  flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-start;
   gap: 20px;
@@ -121,6 +121,7 @@
 }
 .restaurant-cards {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-start;
   gap: 20px;

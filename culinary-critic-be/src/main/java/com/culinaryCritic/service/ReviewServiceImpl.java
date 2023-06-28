@@ -38,7 +38,9 @@ public class ReviewServiceImpl implements ReviewService{
         Date weekAgo = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000); // Calculate the date one week ago
 
         // Check if the user has already given a review within the current week
-        List<Review> existingReviews = reviewRepository.findByReviewerNameAndReviewDateBetween(review.getReviewerName(), weekAgo, currentDate);
+        List<Review> existingReviews = reviewRepository.findByReviewerNameAndRestaurantIdAndReviewDateBetween(
+                review.getReviewerName(), restaurantId, weekAgo, currentDate);
+
         if (!existingReviews.isEmpty()) {
             throw new LimitExceededException("You have already submitted a review for this restaurant within the current week.");
         }
