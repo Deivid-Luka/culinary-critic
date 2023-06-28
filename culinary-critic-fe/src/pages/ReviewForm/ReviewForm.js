@@ -3,6 +3,7 @@ import axios from 'axios';
 import './ReviewForm.css';
 import { Rating } from '@mui/material';
 import TextField from '@mui/material/TextField';
+import { toast } from 'react-toastify';
 
 function ReviewForm({ restaurantId, onReviewSubmit }) {
   const [rating, setOverallRating] = useState(0);
@@ -60,6 +61,7 @@ function ReviewForm({ restaurantId, onReviewSubmit }) {
       setReviewerName('');
     } catch (error) {
       console.error(error);
+      toast.error(error.response.data); // Display error message in toast notification
     }
   };
 

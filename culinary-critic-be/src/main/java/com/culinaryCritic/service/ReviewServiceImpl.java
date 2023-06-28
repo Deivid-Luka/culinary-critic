@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.naming.LimitExceededException;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ReviewServiceImpl implements ReviewService{
@@ -30,11 +31,21 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     public void saveReviewWithUser(Long restaurantId, Review review, String token) throws Exception {
-
         JWTValues jwtValues = jwtTokenFunctions.tokenValueExtractor(token);
         review.setReviewerName(jwtValues.getUsername());
-        saveReview(restaurantId,review);
+
+        Date currentDate = new Date();
+        Date weekAgo = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000); // Calculate the date one week ago
+
+        // Check if the user has already given a review within the current week
+        List<Review> existingReviews = reviewRepository.findByReviewerNameAndReviewDateBetween(review.getReviewerName(), weekAgo, currentDate);
+        if (!existingReviews.isEmpty()) {
+            throw new LimitExceededException("You have already submitted a review for this restaurant within the current week.");
+        }
+
+        saveReview(restaurantId, review);
     }
+
     @Override
     public void saveReview(Long restaurantId, Review review) throws LimitExceededException {
         if (review.getReport().length()>=100) {

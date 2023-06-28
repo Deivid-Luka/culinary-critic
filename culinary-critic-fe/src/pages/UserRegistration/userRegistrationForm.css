@@ -6,7 +6,6 @@ body {
     padding: 0px !important;
   }
   .container {
-    background-color: lightyellow;
     border: none;
     height: 100vh;
     width: 110vw;
@@ -21,7 +20,6 @@ body {
   .MuiTextField-root {
     margin: 1em;
     width: 25ch;
-    background-color: lightyellow;
   }
   
   .MuiFormLabel-root {
@@ -32,5 +30,9 @@ body {
     margin: 1em;
     background-color: #fdd835;
     color: #333;
+  }
+
+  .Back{
+    width: 5.5vw;
   }
   

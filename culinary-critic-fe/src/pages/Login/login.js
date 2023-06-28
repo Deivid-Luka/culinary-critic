@@ -8,6 +8,8 @@ import { postLogin } from '../../services/userServices';
 import { toast } from 'react-toastify';
 import { useAppContext } from '../../AppContext';
 import { useNavigate } from 'react-router-dom';
+import func from "../../services/functions";
+
 
 function LoginPage(props) {
   const [username, setUsername] = useState('');
@@ -35,6 +37,7 @@ function LoginPage(props) {
             setUser(res.data);
             localStorage.setItem('cc-user', JSON.stringify(res.data));
             localStorage.setItem('cc-token', res.headers['authorization']);
+            func.setCookie("cc-token",res.headers['authorization'],1);
             res.headers['Authorization'] = res.data.token;
             toast('Logged in');
             // Redirect to the dashboard or perform any other action upon successful login

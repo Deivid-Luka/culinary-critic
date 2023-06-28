@@ -1,9 +1,10 @@
 import React from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { TextField, Button, Typography } from '@material-ui/core';
+import { TextField, Button, Typography,IconButton  } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import './userRegistrationForm.css';
+import { toast } from 'react-toastify';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -60,7 +61,10 @@ const RegistrationForm = () => {
     })
       .then((response) => {
         if (response.status === 200) {
-            window.location.href = '/login';
+          toast.success("Registered Successfully"); // Display success toast notification
+          setTimeout(() => {
+            window.location.href = '/login'; // Redirect to login page after a delay
+          }, 1000); 
         } else {
           throw new Error('Registration failed. Status: ' + response.status);
         }
@@ -72,6 +76,9 @@ const RegistrationForm = () => {
       .finally(() => {
         setSubmitting(false);
       });
+  };
+  const goBack = () => {
+    window.history.back();
   };
 
   return (
@@ -145,6 +152,7 @@ const RegistrationForm = () => {
               helperText={<ErrorMessage name="email" />}
               error={errors.email && touched.email}
             />
+            <div>
             <Button
               type="submit"
               className={classes.button}
@@ -154,6 +162,16 @@ const RegistrationForm = () => {
             >
               Register
             </Button>
+
+            <Button
+              className="Back"
+              variant="contained"
+              color="primary"
+              onClick={goBack}
+            >
+              Back
+            </Button>
+            </div>
           </Form>
         )}
       </Formik>

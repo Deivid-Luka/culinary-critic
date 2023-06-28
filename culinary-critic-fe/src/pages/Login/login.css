@@ -1,12 +1,10 @@
 .container {
-  background-color: lightyellow;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .containerError {
-  background-color: lightyellow;
   border: 1px solid red;
 }
 
