@@ -31,11 +31,9 @@ function App() {
                 />
               </Route>
 
-              {/* Additional routes */}
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/" element={<Dashboard />} />
               <Route path="/signup" element={<RegistrationForm />} />
-              {/* <Route path="/" element={<HomePage />} /> */}
-              {/* <Route path="*" element={<h1>Not Found</h1>} /> */}
+
             </Routes>
           </Wrapper>
         </Router>

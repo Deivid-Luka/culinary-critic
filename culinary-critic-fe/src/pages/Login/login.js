@@ -40,8 +40,7 @@ function LoginPage(props) {
             func.setCookie("cc-token",res.headers['authorization'],1);
             res.headers['Authorization'] = res.data.token;
             toast('Logged in');
-            // Redirect to the dashboard or perform any other action upon successful login
-            navigate('/dashboard'); // Replace '/dashboard' with your desired URL
+            navigate('/'); 
           }
         })
         .catch((error) => {

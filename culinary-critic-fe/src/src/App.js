@@ -22,14 +22,11 @@ function App() {
                     <Routes>
                         <Route element={<AuthorizedRoutes />} >
                             <Route exact path="/addrestaurant" element={<AddRestaurantPage />} />
-                            <Route exact path="/dashboard" element={<Dashboard />} />
+                            <Route exact path="/" element={<Dashboard />} />
                         </Route>
-                        {/*<Route element={<AuthorizedRoute />} >*/}
-                        {/*    <Route path="/" element={<HomePage />} />*/}
-                        {/*</Route>*/}
+
                         <Route exact path="/login" element={<LoginPage />} />
                         <Route exact path="/forbidden" element={<Forbidden403 />} />
-                        {/*<Route path="*" element={<h1>Not Found</h1>} />*/}
                     </Routes>
                 </Wrapper>
             </Router>
