@@ -23,6 +23,11 @@ function RestaurantCard({
     setIsRatingSectionOpen(!isRatingSectionOpen);
   };
 
+  const getExpenseString = (expense) => {
+    const dollarSigns = Math.floor(expense / 20);
+    return Array.from({ length: dollarSigns }, () => '$').join('');
+  };
+
   return (
     <div key={restaurantInfo.restaurant.id} className="restaurant-card">
       <h3 className="restaurant-name">{restaurantInfo.restaurant.name}</h3>
@@ -32,9 +37,29 @@ function RestaurantCard({
       <p className="restaurant-info">
         <strong>Type of Food:</strong> {restaurantInfo.restaurant.typeOfFood}
       </p>
+      {restaurantInfo.restaurant.occasion && (
+        <p className="restaurant-info">
+          <strong>Occasion:</strong> {restaurantInfo.restaurant.occasion}
+        </p>
+      )}
+      <p className="restaurant-info">
+        <strong>Dining Options:</strong> {restaurantInfo.restaurant.diningOptions}
+      </p>
+      {restaurantInfo.restaurant.averageExpense && (
+        <p className="restaurant-info">
+          <strong>Average Expense:</strong> {getExpenseString(restaurantInfo.restaurant.averageExpense)}
+        </p>
+      )}
+
+      {restaurantInfo.restaurant.allergyInformation && (
+        <p className="restaurant-info">
+          <strong>Allergy Information:</strong> {restaurantInfo.restaurant.allergyInformation}
+        </p>
+      )}
+
       {/* Render average ratings */}
       <div className="average-ratings">
-        <p>Average Overall Rating({restaurantInfo.numberOfReviews}):</p>
+        <p>Average Overall Rating ({restaurantInfo.numberOfReviews}):</p>
         <Rating name="average-rating" value={restaurantInfo.averageRating} precision={0.5} readOnly />
       </div>
 
@@ -101,70 +126,123 @@ function RestaurantCard({
             </div>
           </div>
         )}
-      </div>
 
-      {/* Render the ReviewForm component */}
-      {!showReviewForm[restaurantInfo.restaurant.id] && !isReviewFormOpen && (
-        <button
-          className="leave-review-button"
-          onClick={() => toggleReviewForm(restaurantInfo.restaurant.id)}
-        >
-          Leave a Review
-        </button>
-      )}
+        {/* Render the ReviewForm component */}
+        {!showReviewForm[restaurantInfo.restaurant.id] && !isReviewFormOpen && (
+          <button
+            className="leave-review-button"
+            onClick={() => toggleReviewForm(restaurantInfo.restaurant.id)}
+          >
+            Leave a Review
+          </button>
+        )}
 
-      {(showReviewForm[restaurantInfo.restaurant.id] || isReviewFormOpen) && (
-        <div className="review-section">
-          {isReviewFormOpen && (
-            <div className="review-form-popup">
-              <ReviewForm
-                restaurantId={restaurantInfo.restaurant.id}
-                onReviewSubmit={(review) => handleReviewSubmit(restaurantInfo.restaurant.id, review)}
-              />
-              <button
-                className="close-review-button"
-                onClick={() => toggleReviewForm(restaurantInfo.restaurant.id)}
-              >
-                Close
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Render show/hide reviews button */}
-      {restaurantInfo.restaurant.reviews && restaurantInfo.restaurant.reviews.length > 0 && (
-        <button
-          className="show-reviews-button"
-          onClick={() => toggleShowReviews(restaurantInfo.restaurant.id)}
-        >
-          {showReviews[restaurantInfo.restaurant.id] ? 'Hide Reviews' : 'Show Reviews'}
-        </button>
-      )}
-
-      {/* Render the reviews if showReviews is true */}
-      {showReviews[restaurantInfo.restaurant.id] &&
-        restaurantInfo.restaurant.reviews &&
-        restaurantInfo.restaurant.reviews.length > 0 && (
-          <div className="restaurant-reviews">
-            <h4>Reviews:</h4>
-            <ul>
-              {restaurantInfo.restaurant.reviews.map((review) => (
-                <li key={review.id}>
-                  <p>Overall Rating: {review.rating}</p>
-                  <p>Food Quality Rating: {review.foodQualityRating}</p>
-                  <p>Ambiance Rating: {review.ambianceRating}</p>
-                  <p>Service Quality Rating: {review.serviceQualityRating}</p>
-                  <p>Cleanliness Rating: {review.cleanlinessRating}</p>
-                  <p>Speed Of Service Rating: {review.speedOfServiceRating}</p>
-                  <p>Value For Money Rating: {review.valueForMoneyRating}</p>
-                  <p>Report: {review.report}</p>
-                  <p>Reviewer: {review.reviewerName}</p>
-                </li>
-              ))}
-            </ul>
+        {(showReviewForm[restaurantInfo.restaurant.id] || isReviewFormOpen) && (
+          <div className="review-section">
+            {isReviewFormOpen && (
+              <div className="review-form-popup">
+                <ReviewForm
+                  restaurantId={restaurantInfo.restaurant.id}
+                  onReviewSubmit={(review) => handleReviewSubmit(restaurantInfo.restaurant.id, review)}
+                />
+                <button
+                  className="close-review-button"
+                  onClick={() => toggleReviewForm(restaurantInfo.restaurant.id)}
+                >
+                  Close
+                </button>
+              </div>
+            )}
           </div>
         )}
+
+        {/* Render show/hide reviews button */}
+        {restaurantInfo.restaurant.reviews && restaurantInfo.restaurant.reviews.length > 0 && (
+          <button
+            className="show-reviews-button"
+            onClick={() => toggleShowReviews(restaurantInfo.restaurant.id)}
+          >
+            {showReviews[restaurantInfo.restaurant.id] ? 'Hide Reviews' : 'Show Reviews'}
+          </button>
+        )}
+
+        {/* Render the reviews if showReviews is true */}
+        {showReviews[restaurantInfo.restaurant.id] &&
+          restaurantInfo.restaurant.reviews &&
+          restaurantInfo.restaurant.reviews.length > 0 && (
+            <div className="restaurant-reviews">
+              <h4>Reviews:</h4>
+              <ul>
+                {restaurantInfo.restaurant.reviews.map((review) => (
+                  <li key={review.id}>
+                    <div className="review-ratings">
+                      <div>
+                        <p>Overall Rating:</p>
+                        <Rating name={`overall-rating-${review.id}`} value={review.rating} precision={0.5} readOnly />
+                      </div>
+                      <div>
+                        <p>Food Quality Rating:</p>
+                        <Rating
+                          name={`food-quality-rating-${review.id}`}
+                          value={review.foodQualityRating}
+                          precision={0.5}
+                          readOnly
+                        />
+                      </div>
+                      <div>
+                        <p>Ambiance Rating:</p>
+                        <Rating
+                          name={`ambiance-rating-${review.id}`}
+                          value={review.ambianceRating}
+                          precision={0.5}
+                          readOnly
+                        />
+                      </div>
+                      <div>
+                        <p>Service Quality Rating:</p>
+                        <Rating
+                          name={`service-quality-rating-${review.id}`}
+                          value={review.serviceQualityRating}
+                          precision={0.5}
+                          readOnly
+                        />
+                      </div>
+                      <div>
+                        <p>Cleanliness Rating:</p>
+                        <Rating
+                          name={`cleanliness-rating-${review.id}`}
+                          value={review.cleanlinessRating}
+                          precision={0.5}
+                          readOnly
+                        />
+                      </div>
+                      <div>
+                        <p>Speed Of Service Rating:</p>
+                        <Rating
+                          name={`speed-of-service-rating-${review.id}`}
+                          value={review.speedOfServiceRating}
+                          precision={0.5}
+                          readOnly
+                        />
+                      </div>
+                      <div>
+                        <p>Value For Money Rating:</p>
+                        <Rating
+                          name={`value-for-money-rating-${review.id}`}
+                          value={review.valueForMoneyRating}
+                          precision={0.5}
+                          readOnly
+                        />
+                      </div>
+                    </div>
+                    <p>Report: {review.report}</p>
+                    <p>Reviewer: {review.reviewerName}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+      </div>
     </div>
   );
 }

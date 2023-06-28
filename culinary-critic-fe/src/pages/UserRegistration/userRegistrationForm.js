@@ -1,11 +1,10 @@
 import React from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { TextField, Button, Typography,IconButton  } from '@material-ui/core';
+import { TextField, Button, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import './userRegistrationForm.css';
 import { toast } from 'react-toastify';
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,10 +19,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const styles = {
-  center :{
+  center: {
     display: 'flex',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 };
 
 const RegistrationForm = () => {
@@ -37,12 +36,18 @@ const RegistrationForm = () => {
     city: '',
     birthday: '',
     mobileNumber: '',
-    email: ''
+    email: '',
   };
 
   const validationSchema = Yup.object().shape({
-    username: Yup.string().required('Required'),
-    password: Yup.string().required('Required'),
+    username: Yup.string().required('Required').min(6,'Username must be at least 6 characters'),
+    password: Yup.string()
+      .required('Required')
+      .min(8, 'Password must be at least 8 characters')
+      .matches(
+        /(?=.*[!@#$%^&*])/,
+        'Password must contain at least one special character'
+      ),
     firstName: Yup.string().required('Required'),
     lastName: Yup.string().required('Required'),
     city: Yup.string().required('Required'),
@@ -61,10 +66,10 @@ const RegistrationForm = () => {
     })
       .then((response) => {
         if (response.status === 200) {
-          toast.success("Registered Successfully"); // Display success toast notification
+          toast.success('Registered Successfully');
           setTimeout(() => {
-            window.location.href = '/login'; // Redirect to login page after a delay
-          }, 1000); 
+            window.location.href = '/login';
+          }, 1000);
         } else {
           throw new Error('Registration failed. Status: ' + response.status);
         }
@@ -83,7 +88,9 @@ const RegistrationForm = () => {
 
   return (
     <div className="container">
-      <Typography variant="h4" style={styles.center}>Register</Typography>
+      <Typography variant="h4" style={styles.center}>
+        Register
+      </Typography>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -153,24 +160,24 @@ const RegistrationForm = () => {
               error={errors.email && touched.email}
             />
             <div>
-            <Button
-              type="submit"
-              className={classes.button}
-              variant="contained"
-              color="primary"
-              disabled={!(dirty && isValid)}
-            >
-              Register
-            </Button>
+              <Button
+                type="submit"
+                className={classes.button}
+                variant="contained"
+                color="primary"
+                disabled={!(dirty && isValid)}
+              >
+                Register
+              </Button>
 
-            <Button
-              className="Back"
-              variant="contained"
-              color="primary"
-              onClick={goBack}
-            >
-              Back
-            </Button>
+              <Button
+                className="Back"
+                variant="contained"
+                color="primary"
+                onClick={goBack}
+              >
+                Back
+              </Button>
             </div>
           </Form>
         )}

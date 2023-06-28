@@ -123,5 +123,7 @@
     font-size: 16px; /* Adjust the font size as needed */
   }
   
-
+.collapsible-rating-section{
+  display: grid;
+}
 /* Rest of the CSS code */
