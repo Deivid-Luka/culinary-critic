@@ -66,7 +66,7 @@ function LoginPage(props) {
     localStorage.clear();
     func.clearAllCookies();
     toast('Continuing as guest');
-    navigate('/dashboard');
+    navigate('/');
   };
 
   return (
